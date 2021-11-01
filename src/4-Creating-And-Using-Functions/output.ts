@@ -19,11 +19,11 @@ export default async function updateOutput(id: string) {
 }
 
 function layoutProducts(products: ProductType[]) {
-  const items = products.map((p) => {
+  const items = products.map(({id, name, icon}) => {
     const productHtml = `
-      <span class="card-id">#${p.id}</span>
-        <i class="card-icon ${p.icon} fa-lg"></i>
-      <span class="card-name">${p.name}</span>
+      <span class="card-id">#${id}</span>
+        <i class="card-icon ${icon} fa-lg"></i>
+      <span class="card-name">${name}</span>
     `;
     const cardHtml = `
       <li>
@@ -121,7 +121,8 @@ function runTheLearningSamples() {
 
   displayProducts(sampleProducts);
 
-  const getRandomInt = (max: number = 1000) => Math.floor(Math.random() * max);
+  const { floor, random } = Math;
+  const getRandomInt = (max: number = 1000) => floor(random() * max);
 
   function createProduct(name: string, icon?: string): ProductType {
     const id = getRandomInt(100000);
@@ -152,7 +153,28 @@ function runTheLearningSamples() {
   console.log(pineapple, mango);
 
   function buildAddress(street: string, city: string, ...restOfAddress: string[]) {
-    const address = `${street} ${city} ${restOfAddress.join(' ')}`;
+    const address = `${street} ${city} ${restOfAddress.join('-')}`;
     return address;
+  }
+
+  const someAddress = buildAddress(
+    '1 lois lane', // street
+    'smallville', // city
+    'apt 101', // rest arg 0
+    'area 51', // rest arg 1
+    'mystery country' // rest arg 2
+  );
+
+  console.log(`${prefix} Rest parameters`);
+  console.log(someAddress);
+
+  function displayProduct({ id, name }: ProductType): void {
+    console.log(`${prefix} Destructuring parameters`);
+    console.log(`Product id=${id} and name=${name}`);
+  }
+
+  const prod = getProductById(10);
+  if(prod) {
+    displayProduct(prod);
   }
 }
