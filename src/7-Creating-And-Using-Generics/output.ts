@@ -16,7 +16,7 @@ class GenericModel<T extends HasId> {
   }
 
   getItemById(id: number): T | undefined {
-    return this.items ? this.items.find((p) => (id = p.id)) : undefined;
+    return this.items ? this.items.find((p) => (id === p.id)) : undefined;
   }
 }
 
@@ -78,7 +78,7 @@ async function getList<T>(url: string): Promise<T[]> {
 runTheLearningSamples();
 
 async function runTheLearningSamples() {
-  // Reusable code with generics
+
   function whatIsIt_number(arg: number): number {
     return arg;
   }
@@ -106,19 +106,12 @@ async function runTheLearningSamples() {
   let b: boolean = whatIsIt_typed<boolean>(true);
   console.log(n, s, b);
 
-  // generics on functions
-
-  // ~ examine getProducts() and how it returns a Promise<FoodProduct[]>
-  // ~ examine getList() and how it returns a Promise<T[]>
-
   interface Customer {
     id: number;
     name: string;
   }
 
   async function getData() {
-    console.log(`${prefix} Generic Functions`);
-
     const products = await getList<FoodProduct>(productsURL);
     console.table(products);
 
@@ -126,8 +119,6 @@ async function runTheLearningSamples() {
     console.table(customers);
   }
   await getData();
-
-  // generic interface
 
   interface Model<T> {
     items: T[] | undefined;
@@ -144,7 +135,7 @@ async function runTheLearningSamples() {
     }
 
     getItemById(id: number): FoodProduct | undefined {
-      return this.items ? this.items.find((item) => (id = item.id)) : undefined;
+      return this.items ? this.items.find((item) => (id === item.id)) : undefined;
     }
   }
 
@@ -152,10 +143,6 @@ async function runTheLearningSamples() {
   await foodModel.getItems();
   console.log(`${prefix} Generic Interface`);
   console.table(foodModel.items);
-
-  // generic classes
-
-  // see GenericModel<T>
 
   const genericFoodModel = new GenericModel<FoodProduct>(productsURL);
   const genericCustomerModel = new GenericModel<Customer>(customersURL);
@@ -165,22 +152,14 @@ async function runTheLearningSamples() {
   console.table(genericFoodModel.items);
   console.table(genericCustomerModel.items);
 
-  // generic constraints
-
-  // see GenericModel and how it extends the T ==> class GenericModel<T extends HasId> {}
-
-  // Built-in Constraints
-
-  // ReadOnly<T> constraint
   const model: FoodModel = new FoodModel();
   await model.getItems();
   const foodItem: Readonly<FoodProduct | undefined> = model.getItemById(10);
   if (foodItem) {
-    // foodItem.name = 'some name';
-    // foodItem.icon = 'some icon';
+  //   foodItem.name = 'some name';
+  //   foodItem.icon = 'some icon';
   }
 
-  // Partial<T> constraint
   const pear = { name: 'pear' };
   // const pearFood: FoodProduct = pear;
   const pearFood: Partial<FoodProduct> = pear;
